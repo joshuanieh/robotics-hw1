@@ -105,8 +105,7 @@ int main(int argc, char **argv)
   y *= 1000;
   th = th / 3.14 * 180;
   double tangent, theta, distance;
-  bool done = false;
-  int counter = 0;
+  bool done = false, littleMove = false;
   while(done == false) {
     printf("1.now at %f %f %f\n", robot.getX(), robot.getY(), robot.getTh());
     tangent = (y - robot.getY()) / (x - robot.getX());
@@ -133,14 +132,14 @@ int main(int argc, char **argv)
     robot.unlock();
     while (1) {
       while(robot.getClosestSonarRange(-40, 40) < safeDistance) {
-        counter = 3;
+        littleMove = true;
         robot.lock();
         robot.setVel(0);
         if(robot.getClosestSonarRange(0, 180) < robot.getClosestSonarRange(-100, 0)) {
-          robot.setDeltaHeading(-90);
+          robot.setDeltaHeading(-30);
         }
         else {
-          robot.setDeltaHeading(90);
+          robot.setDeltaHeading(30);
         }
         robot.unlock();
         while (1) {
@@ -154,10 +153,10 @@ int main(int argc, char **argv)
           ArUtil::sleep(100);
         }
       }
-      if(counter) {
-        counter = 0;
+      if(littleMove) {
+        littleMove = false;
         robot.lock();
-        robot.move(100);
+        robot.move(500);
         robot.unlock();
         while (1) {
           robot.lock();
@@ -171,7 +170,7 @@ int main(int argc, char **argv)
             break;
           }
           robot.unlock();
-          ArUtil::sleep(100);
+          ArUtil::sleep(20);
         }
         printf("3.now at %f %f %f\n", robot.getX(), robot.getY(), robot.getTh());
         break;
