@@ -8,7 +8,7 @@
 
 */
 ArRobot robot;
-int safeDistance = 500;
+int safeDistance = 600;
 void up()
 { 
   robot.lock();
@@ -157,11 +157,14 @@ int main(int argc, char **argv)
       if(counter) {
         counter = 0;
         robot.lock();
-        robot.move(500);
+        robot.move(100);
         robot.unlock();
         while (1) {
           robot.lock();
-          if(robot.getClosestSonarRange(-40, 40) < safeDistance) break;
+          if(robot.getClosestSonarRange(-40, 40) < safeDistance) {
+            robot.unlock();
+            break;
+          }
           if (robot.isMoveDone()) {
             printf("Finished move\n");
             robot.unlock();
